@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from discord import FFmpegPCMAudio
+from time import sleep
 
 bot = commands.Bot('!')
 
@@ -24,6 +25,11 @@ async def hello(ctx):
     answer = 'Whats up, ' + name + '!' + " I'm the " + bot.user.name
     await ctx.send(answer)
 
+@bot.command(name='ping')
+async def ping(ctx):
+    ping = round(bot.latency * 1000)
+    await ctx.send(f'My ping is {ping} ms')
+
 @bot.command(name='join')
 async def join(ctx):
     if ctx.author.voice:
@@ -43,6 +49,22 @@ async def leave(ctx):
         await ctx.send(f'I left the {ctx.message.author.voice.channel} voice channel')
     else:
         await ctx.send("I'm not in a voice channel")
+
+@bot.command(name='1')
+async def number_1(ctx):
+    voice_channel = ctx.author.voice.channel
+    channel = None
+    if voice_channel != None:
+        channel = voice_channel
+        vc = await voice_channel.connect()
+        vc.play(FFmpegPCMAudio(executable="C:/FFmpeg/ffmpeg.exe", source="audio/are_you_ready.mp3"))
+        while vc.is_playing():
+            sleep(4)
+        await vc.disconnect()
+        await ctx.message.delete()
+    else:
+        await ctx.send(str(ctx.author.name) + "is not in a channel.")
+        await ctx.message.delete()
 
 bot.run("OTc5MjAyMTQyNTgzNzkxNjQ2.GUky5-.v3UXtoeeugEYiGqp5xpcIfYD-LEn3vGqiSUNaM")
 
