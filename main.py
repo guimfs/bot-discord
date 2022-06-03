@@ -1,4 +1,5 @@
 import discord
+import random
 from discord.ext import commands, tasks
 from discord import FFmpegPCMAudio
 from time import sleep
@@ -50,13 +51,27 @@ async def leave(ctx):
     else:
         await ctx.send("I'm not in a voice channel")
 
+@bot.command(name='tuck')
+async def tuck(ctx):
+    randomgifs = [
+        "https://c.tenor.com/aNK9IydzMTIAAAAd/age-of-empires2.gif",
+    ]
+    
+    embed = discord.Embed(
+        title = "",
+        description = "",
+        color = ctx.author.color
+    )
+
+    randomgif = random.choice(randomgifs)
+    embed.set_image(url = randomgif)
+    await ctx.send(embed = embed)
+
 @bot.command(name='1')
 async def number_1(ctx):
-    voice_channel = ctx.author.voice.channel
-    channel = None
-    if voice_channel != None:
-        channel = voice_channel
-        vc = await voice_channel.connect()
+    if ctx.author.voice:
+        channel = ctx.author.voice.channel
+        vc = await channel.connect()
         vc.play(FFmpegPCMAudio(executable="C:/FFmpeg/ffmpeg.exe", source="audio/are_you_ready.mp3"))
         while vc.is_playing():
             sleep(4)
@@ -64,6 +79,20 @@ async def number_1(ctx):
         await ctx.message.delete()
     else:
         await ctx.send(str(ctx.author.name) + "is not in a channel.")
+        await ctx.message.delete()
+
+@bot.command(name='2')
+async def number_2(ctx):
+    if ctx.author.voice:
+        channel = ctx.author.voice.channel
+        vc = await channel.connect()
+        vc.play(FFmpegPCMAudio(executable="C:/FFmpeg/ffmpeg.exe", source="audio/where_is_my_mother.mp3"))
+        while vc.is_playing():
+            sleep(4)
+        await vc.disconnect()
+        await ctx.message.delete()
+    else:
+        await ctx.send(str(ctx.author.name) + " is not in a channel.")
         await ctx.message.delete()
 
 bot.run("OTc5MjAyMTQyNTgzNzkxNjQ2.GUky5-.v3UXtoeeugEYiGqp5xpcIfYD-LEn3vGqiSUNaM")
